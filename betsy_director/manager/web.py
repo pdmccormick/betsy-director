@@ -1,6 +1,6 @@
 import logging
 
-from flask import Flask, render_template, request
+from flask import Flask, Response, render_template, request
 from flask.ext.socketio import SocketIO, emit
 
 log = logging.getLogger(__name__)
@@ -44,6 +44,11 @@ def run_webapp(manager, host=None, port=None, debug=True):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/gridmap')
+def gridmap():
+    if request.method == 'GET':
+        return Response(socketio.manager.gridmap.to_json(), mimetype='application/json')
 
 # SocketIO endpoints
 @socketio.on('connect', namespace='/events')

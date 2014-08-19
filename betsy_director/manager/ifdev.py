@@ -59,6 +59,9 @@ class IfDevice(object):
     def __unicode__(self):
         return u"name=%s addr=%s netmask=%s broadcast=%s mac=%s" % (self.name, self.addr, self.netmask, self.broadcast, self.mac)
 
+    def __str__(self):
+        return unicode(self)
+
     def __repr__(self):
         return u"<IfDevice %s>" % (self,)
 

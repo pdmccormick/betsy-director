@@ -7,7 +7,7 @@ body {
     text-align: center;
 }
 
-#num_clients {
+#num_clients, #display_size {
     font-weight: bold;
 }
 

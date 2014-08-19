@@ -29,5 +29,15 @@ $(document).ready(function(){
         }
         //socket.emit('my event', {data: 'I\'m connected!'});
     });
+
+    $.getJSON('/gridmap').done(function(data) {
+        if (data.display_size) {
+            var x = data.display_size[0];
+            var y = data.display_size[1];
+            $("#display_size").text(x + "x" + y);
+        }
+    }).fail(function(jqXHR, textStatus, error) {
+        console.log("failed to retrieve gridmap");
+    });
 });
 
