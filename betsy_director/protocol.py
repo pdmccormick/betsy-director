@@ -38,7 +38,8 @@ class Protocol(object):
 
     @classmethod
     def push_dpc_frame(cls, sendto, frame, seq=1):
-        for p in chunk(frame, self.FRAME_CHUNK_SIZE):
+        offs = 0
+        for p in chunk(frame, cls.FRAME_CHUNK_SIZE):
             bufs = [ "dpc data %d;%s" % (offs, p) ]
             sendto(cls.pack(seq, bufs))
             offs += len(p)
@@ -53,8 +54,8 @@ class Protocol(object):
 
         return seq + 1
 
-def push_frame(sock, dest, frame, seq=0):
-    sendto = lambda buf: sock.sendto(buf, dest)
+def push_frame(sock, dest_ip, frame, seq=0):
+    sendto = lambda buf: sock.sendto(buf, (dest_ip, Protocol.UDP_PORT))
 
     seq = Protocol.push_dpc_frame(sendto, frame, seq)
     Protocol.push_dpc_upload(sendto, seq)
