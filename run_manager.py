@@ -35,14 +35,14 @@ def check_environment():
         return False
 
     # Check if this Python binary has the correct capabilities
-    magic_caps = "cap_net_raw+eip"
+    required_caps = "cap_net_admin,cap_net_raw+eip"
     output = subprocess.check_output([ 'getcap', sys.executable ]).strip()
-    if magic_caps not in output:
-        current_cap = "" if output == "" else output.rsplit('=', 1)[1].strip()
-        log.critical("The current Python executable %s does not have the correct capabilities (got `%s`, need `%s`). Please run the following:\n\n\tsudo setcap %s %s\n",
+    if not required_caps in output:
+        current_caps = "" if output == "" else output.rsplit('=', 1)[1].strip()
+        log.critical("The current Python executable %s does not have all of the correct capabilities required (got `%s`, need `%s`). Please run the following:\n\n\tsudo setcap %s %s\n",
             sys.executable,
-            current_cap, magic_caps,
-            magic_caps, sys.executable)
+            current_caps, required_caps,
+            required_caps, sys.executable)
         return False
 
     return True
