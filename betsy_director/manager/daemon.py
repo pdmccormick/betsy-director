@@ -2,6 +2,7 @@ import logging
 import argparse
 
 from .ifdev import IfDevice
+from .web import run_webapp
 
 log = logging.getLogger(__name__)
 
@@ -27,6 +28,8 @@ class ManagerDaemon(object):
             return -1
 
         log.info("using interface %r", self.ifdev)
+
+        run_webapp(self)
 
         return 0
 
