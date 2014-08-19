@@ -23,7 +23,7 @@ class ProcessedImage(object):
 
     def process(self):
         if self.img.mode != 'RGB':
-            self.img = img.convert('RGB')
+            self.img = self.img.convert('RGB')
 
         arr = np.asarray(self.img, dtype=np.uint8)
 

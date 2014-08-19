@@ -39,5 +39,32 @@ $(document).ready(function(){
     }).fail(function(jqXHR, textStatus, error) {
         console.log("failed to retrieve gridmap");
     });
+
+    $("#image_loader").submit(function(ev) {
+        ev.preventDefault();
+
+        var url = $("#image_url").val();
+        var img = $("#load-image");
+        img.attr('src', url);
+
+        var postscaler = $("#settings-postscaler").val();
+
+        $.post('/frame', { url: url, postscaler: postscaler }).done(function(data) {
+        });
+
+        /*
+        var img = new Image();
+        var canvas = $("#image-canvas")[0];
+        var context = canvas.getContext('2d');
+        img.onload = function() {
+            console.log("drawing ", url);
+            context.drawImage(img, 0, 0);
+
+            var dataUrl = canvas.toDataURL();
+            console.log(dataUrl);
+        }
+        img.src = url;
+        */
+    });
 });
 

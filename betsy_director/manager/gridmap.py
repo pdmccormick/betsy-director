@@ -30,6 +30,10 @@ class GridmapEntry(object):
         ])
         return data
 
+    @property
+    def cropbox(self):
+        return (self.xstart, self.ystart, self.xend, self.yend)
+
     def __str__(self):
         return unicode(self)
 

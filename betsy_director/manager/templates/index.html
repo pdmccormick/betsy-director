@@ -44,6 +44,20 @@
             <h1>Betsy</h1>
             <p class="lead"><span id="num_clients">*</span> clients connected</p>
             <p class="lead">Current display size is <span id="display_size">-x-</span> pixels</p>
+
+            <p class="lead">
+            <div>
+                <form id="image_loader">
+                    <input type="text" id="image_url" value="http://pdmccormick.com/betsy-checkmark.png" placeholder="Enter an image URL" size="50">
+                    <input type="text" id="settings-postscaler" value="50" placeholder="Brightness value between 0 and 100" size="3">
+                    <input type="submit" value="Load Image">
+                </form>
+            </div>
+            <div class="image-area">
+                <img id="load-image">
+                <!-- <canvas id="image-canvas" width="640" height="480"></canvas> !-->
+            </div>
+            </p>
         </div>
     </div>
 

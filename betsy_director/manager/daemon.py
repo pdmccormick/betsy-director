@@ -1,10 +1,14 @@
 import os
+import socket
 import logging
 import argparse
+
+from ..protocol import Protocol
 
 from .ifdev import IfDevice
 from .web import run_webapp
 from .gridmap import Gridmap
+from .blaster import Blaster
 
 log = logging.getLogger(__name__)
 
@@ -21,6 +25,8 @@ class ManagerDaemon(object):
         self.ifdev = None
         self.data_path = None
         self.gridmap = None
+        self.blaster = None
+        self.sock = None
 
     def run(self, args):
         p = self.parser.parse_args(args)
@@ -44,11 +50,18 @@ class ManagerDaemon(object):
         log.info("using interface `%s`", self.ifdev.name)
         log.info("using data path %s", self.data_path)
 
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind((str(self.ifdev.addr), Protocol.UDP_PORT))
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+
         self.gridmap = Gridmap()
         self.gridmap.savefile = os.path.join(self.data_path, self.FILENAME_GRIDMAP)
         if os.path.exists(self.gridmap.savefile):
             with open(self.gridmap.savefile, 'r') as fobj:
                 self.gridmap.load(fobj)
+
+        self.blaster = Blaster(self.sock, self.ifdev, self.gridmap)
 
         run_webapp(self)
 
