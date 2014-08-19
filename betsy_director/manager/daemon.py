@@ -15,11 +15,15 @@ log = logging.getLogger(__name__)
 class ManagerDaemon(object):
     FILENAME_GRIDMAP = "gridmap.json"
 
+    DEFAULT_WEB = "127.0.0.1:8080"
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-I", "--ifdev", type=str, nargs=1, help="Tile connected interface")
     parser.add_argument(
         "-D", "--data", type=str, nargs='?', help="Data directory path")
+    parser.add_argument(
+        "-W", "--web", type=str, nargs='?', help="Web server listening `host:port`, defaults to `127.0.0.1:8080`")
 
     def __init__(self):
         self.ifdev = None
@@ -27,6 +31,7 @@ class ManagerDaemon(object):
         self.gridmap = None
         self.blaster = None
         self.sock = None
+        self.web_bind = self.DEFAULT_WEB
 
     def run(self, args):
         p = self.parser.parse_args(args)
@@ -47,6 +52,9 @@ class ManagerDaemon(object):
         else:
             self.data_path = p.data
 
+        if p.web is not None:
+            self.web_bind = p.web
+
         log.info("using interface `%s`", self.ifdev.name)
         log.info("using data path %s", self.data_path)
 
@@ -63,7 +71,9 @@ class ManagerDaemon(object):
 
         self.blaster = Blaster(self.sock, self.ifdev, self.gridmap)
 
-        run_webapp(self)
+        host, port = self.web_bind.split(":", 1)
+        port = int(port)
+        run_webapp(self, host=host, port=port)
 
         return 0
 
